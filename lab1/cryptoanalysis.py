@@ -1,4 +1,7 @@
 from simple_substitution_cipher import SimpleSubstitutionCipher
+
+from affine_cipher import AffineCipher
+from recursive_affine_cipher import RecursiveAffineCipher
 from collections import Counter
 
 default_freq = {
@@ -36,10 +39,10 @@ print(plaintext.upper())
 key = "QWERYUTIOPASDFGHJKLXZCVBNM"
 cipher = SimpleSubstitutionCipher(key=key)
 ciphertext = cipher.encrypt(plaintext=plaintext)
-
+print(ciphertext)
 # Count letter frequensy of cleared ciphertext, if letter not found set as 0.0
-freq = {k:0.0 for k, _ in default_freq.items()}
-ciphertext_cleared = ciphertext.replace(",","").replace(".","").replace(" ","")
+freq = {k: 0.0 for k, _ in default_freq.items()}
+ciphertext_cleared = ciphertext.replace(",", "").replace(".", "").replace(" ", "")
 for letter, count in Counter(ciphertext_cleared).items():
     freq[letter] = count / len(ciphertext_cleared) * 100
 
@@ -50,15 +53,27 @@ default_freq = sorted(default_freq.items(), reverse=True, key=lambda x: x[1])
 # Make csv table of frequensies, and generate pairs of substitution predictions
 table = []
 pairs = []
-for ((letter_in_text, freq_in_text), (letter, freq_by_default)) in zip(freq, default_freq):
-    table.append(';'.join([letter, "{:.2f}".format(freq_by_default), letter_in_text, "{:.2f}".format(freq_in_text)])+"\n")
+for (letter_in_text, freq_in_text), (letter, freq_by_default) in zip(
+    freq, default_freq
+):
+    table.append(
+        ";".join(
+            [
+                letter,
+                "{:.2f}".format(freq_by_default),
+                letter_in_text,
+                "{:.2f}".format(freq_in_text),
+            ]
+        )
+        + "\n"
+    )
     pairs.append((letter, letter_in_text))
 with open("freq_analysis.csv", "w") as f:
     f.writelines(table)
 
 # Sort predicted substitution pairs and predict key
 pairs = sorted(pairs, key=lambda x: x[0])
-predict_key = ''.join([j for _, j in pairs])
+predict_key = "".join([j for _, j in pairs])
 print(predict_key)
 # Try to decrypt using predicted key
 cipher = SimpleSubstitutionCipher(key=predict_key)
