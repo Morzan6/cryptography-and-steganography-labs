@@ -31,7 +31,7 @@ class ReccurentHillCipher:
         return text + self.pad_element * (len(text) % self.block_size)
 
     def _unpad(self, text: str):
-        return text.replace(self.pad_element, "")
+        return text.rstrip(self.pad_element)
 
     def get_key(self, block_number: int) -> Matrix:
         keys = [self.key_1, self.key_2]
