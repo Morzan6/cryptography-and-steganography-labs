@@ -9,8 +9,8 @@ class ReccurentHillCipher:
         key_matrix_2: Matrix,
         alphabet: str = ascii_uppercase,
     ) -> None:
-        self.pad_element = "="
-        self.alphabet = alphabet + self.pad_element
+        self.pad_element = "A"
+        self.alphabet = alphabet
         self.m = len(self.alphabet)
         if key_matrix_1.det() == 0 or key_matrix_2.det() == 0:
             raise Exception(f"det(Key Matrix) must not be equal to 0")
@@ -38,7 +38,9 @@ class ReccurentHillCipher:
 
         for i in range(0, block_number):
             if i > 1:
-                yield keys[i - 1] * keys[i - 2] % self.m
+                new_key = keys[i - 1] * keys[i - 2] % self.m
+                keys.append(new_key)
+                yield new_key
             else:
                 yield keys[i]
 

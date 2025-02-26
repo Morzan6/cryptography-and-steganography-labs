@@ -4,8 +4,8 @@ from string import ascii_uppercase
 
 class HillCipher:
     def __init__(self, key_matrix: Matrix, alphabet: str = ascii_uppercase) -> None:
-        self.pad_element = "="
-        self.alphabet = alphabet + self.pad_element
+        self.pad_element = "A"
+        self.alphabet = alphabet
         self.m = len(self.alphabet)
         if key_matrix.det() == 0:
             raise Exception(f"det(Key) must not be equal to 0")
