@@ -20,7 +20,7 @@ class HillCipher:
         return text + self.pad_element * (len(text) % self.block_size)
 
     def _unpad(self, text: str):
-        return text.replace(self.pad_element, "")
+        return text.rstrip(self.pad_element)
 
     def encrypt(self, plaintext: str):
         x = [self.alphabet.index(i) for i in self._pad(plaintext)]
