@@ -34,5 +34,7 @@ class SimpleSubstitutionCipher:
         return plaintext
 
 
-cipher = SimpleSubstitutionCipher(key="QWERTYUIOPASDFGHJKLZXCVBNM")
-print(cipher.decrypt(cipher.encrypt("HELLO")))
+cipher = SimpleSubstitutionCipher(key="ZYXWVUTSRQPONMLKJIHGFEDCBA")
+ciphertext = cipher.encrypt("ABCD")
+print(ciphertext)
+print(cipher.decrypt(ciphertext))

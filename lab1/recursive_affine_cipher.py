@@ -47,6 +47,7 @@ class RecursiveAffineCipher:
         return plaintext
 
 
-cipher = RecursiveAffineCipher(k1=(3, 5), k2=(5, 11))
-
-print(cipher.decrypt(cipher.encrypt("HELLO")))
+cipher = RecursiveAffineCipher(k1=(3, 7), k2=(5, 8))
+ciphertext = cipher.encrypt("HELLO")
+print(ciphertext)
+print(cipher.decrypt(ciphertext))

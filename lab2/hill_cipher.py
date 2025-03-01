@@ -1,11 +1,11 @@
 from sage.all import Matrix, gcd
-from string import ascii_uppercase
+from string import ascii_uppercase, ascii_letters
 
 
 class HillCipher:
-    def __init__(self, key_matrix: Matrix, alphabet: str = ascii_uppercase) -> None:
+    def __init__(self, key_matrix: Matrix, alphabet: str = ascii_letters) -> None:
         self.pad_element = "A"
-        self.alphabet = alphabet
+        self.alphabet = alphabet + "="
         self.m = len(self.alphabet)
         if key_matrix.det() == 0:
             raise Exception(f"det(Key) must not be equal to 0")

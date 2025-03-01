@@ -10,7 +10,7 @@ class ReccurentHillCipher:
         alphabet: str = ascii_uppercase,
     ) -> None:
         self.pad_element = "A"
-        self.alphabet = alphabet
+        self.alphabet = alphabet +"^-="
         self.m = len(self.alphabet)
         if key_matrix_1.det() == 0 or key_matrix_2.det() == 0:
             raise Exception(f"det(Key Matrix) must not be equal to 0")
@@ -46,6 +46,7 @@ class ReccurentHillCipher:
 
     def encrypt(self, plaintext: str):
         x = [self.alphabet.index(i) for i in self._pad(plaintext)]
+        print(x)
         ciphertext_list = []
         keys = self.get_key(block_number=len(x) // self.block_size)
         for i in range(0, len(x), self.block_size):
@@ -55,6 +56,7 @@ class ReccurentHillCipher:
             ciphertext_list.extend(cipher_block.list())
             if i - self.block_size * i > 1:
                 self.keys.append(self.keys[i - self.block_size * i - 1] * key)
+        print([i % self.m for i in ciphertext_list])
         ciphertext = "".join([self.alphabet[i % self.m] for i in ciphertext_list])
         return ciphertext
 
