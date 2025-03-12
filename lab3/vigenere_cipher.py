@@ -5,8 +5,8 @@ from typing import Generator
 
 class VigenereMode(str, Enum):
     REPEATED_KEY = "REPEATED_KEY"
-    SELF_KEY_PLAINTEXT = "SELF_KEY_PLAINTEXT"
-    SELF_KEY_CIPHERTEXT = "SELF_KEY_CIPHERTEXT"
+    PLAINTEXT_KEY = "PLAINTEXT_KEY"
+    CIPHERTEXT_KEY = "CIPHERTEXT_KEY"
 
 
 class VigenereCipher:
@@ -19,8 +19,8 @@ class VigenereCipher:
     def get_gamma(self) -> str:
         return {
             VigenereMode.REPEATED_KEY: self._repeated_gamma(),
-            VigenereMode.SELF_KEY_PLAINTEXT: self._plaintext_gamma(),
-            VigenereMode.SELF_KEY_CIPHERTEXT: self._ciphertext_gamma(),
+            VigenereMode.PLAINTEXT_KEY: self._plaintext_gamma(),
+            VigenereMode.CIPHERTEXT_KEY: self._ciphertext_gamma(),
         }.get(self.mode)
 
     def _repeated_gamma(self) -> Generator[str]:
@@ -73,6 +73,6 @@ class VigenereCipher:
         return self.plaintext
 
 
-cipher = VigenereCipher(key="KEY", mode=VigenereMode.SELF_KEY_CIPHERTEXT)
+cipher = VigenereCipher(key="KEY", mode=VigenereMode.CIPHERTEXT_KEY)
 
 print(cipher.decrypt(cipher.encrypt("HELLOWORLD")))
