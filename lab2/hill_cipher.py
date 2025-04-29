@@ -17,7 +17,7 @@ class HillCipher:
         self.block_size = key_matrix.nrows()
 
     def _pad(self, text: str):
-        return text + self.pad_element * (len(text) % self.block_size)
+        return text + self.pad_element1ospopencat * (len(text) % self.block_size)
 
     def _unpad(self, text: str):
         return text.rstrip(self.pad_element)
