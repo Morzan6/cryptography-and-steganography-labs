@@ -155,8 +155,6 @@ class Qim:
         image: Image.Image = Image.fromarray(encoded_array, "RGB")
         image.save(output_path)
 
-    def _MSE(self):
-        return np.square()
 
 def main() -> None:
     qim = Qim()
