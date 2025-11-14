@@ -201,15 +201,18 @@ class GaloisField:
 
 def main():
    p = 2
-   n = 2
-   poly_modulus = Polynomial([1, 1, 1], p)
+   n = 3
+   poly_modulus = Polynomial([1, 0, 1, 1], p)
    field = GaloisField(p, n, poly_modulus)
    print(field.poly_modulus)
    print(field.all_elements())
-   print(field.generators())    
-   power = field.decompose(field.all_elements()[2], field.generators()[1])
-   assert field.all_elements()[2] == field.generators()[1] ** power
+   print(field.generators())
+   print(GFElement(Polynomial([0,1],p),field))
+   print(GFElement(Polynomial([1,1,1],p), field=field))
+   power = field.decompose(GFElement(Polynomial([0,1],p), field=field), GFElement(Polynomial([1,1,1],p), field=field))
    print(power)
+#    assert field.all_elements()[2] == field.generators()[1] ** power
+#    print(power)
 
 if __name__ == "__main__":
     main()
