@@ -200,17 +200,20 @@ class GaloisField:
         return log_table[key]
 
 def main():
-   p = 2
+   p = 3
    n = 3
-   poly_modulus = Polynomial([1, 0, 1, 1], p)
+   poly_modulus = Polynomial([1, 0, 2, 1], p)
+   print(poly_modulus)
    field = GaloisField(p, n, poly_modulus)
    print(field.poly_modulus)
    print(field.all_elements())
    print(field.generators())
-   print(GFElement(Polynomial([0,1],p),field))
-   print(GFElement(Polynomial([1,1,1],p), field=field))
-   power = field.decompose(GFElement(Polynomial([0,1],p), field=field), GFElement(Polynomial([1,1,1],p), field=field))
+#    print(GFElement(Polynomial([0,1],p),field))
+#    print(GFElement(Polynomial([1,2],p))
+   print(GFElement(Polynomial([0,0,1],p), field=field))
+   power = field.decompose(GFElement(Polynomial([0,0,1],p), field=field), GFElement(Polynomial([0,1],p), field=field))
    print(power)
+#    print(power)
 #    assert field.all_elements()[2] == field.generators()[1] ** power
 #    print(power)
 

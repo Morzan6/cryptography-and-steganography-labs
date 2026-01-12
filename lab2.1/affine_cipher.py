@@ -20,6 +20,8 @@ class AffineCipher:
 
         for i in range(0, len(bin_text), self.field.n):
             result.append(self.field.element_from_coeffs([int(char) for char in bin_text[i:i + self.field.n]]))
+        # print(bin_text)
+        # print(result)
         return result
 
     def _convert_field_elements_to_text(self, field_elements: list[GFElement]) -> str:
@@ -55,15 +57,18 @@ class AffineCipher:
 
     def decrypt(self, ciphertext: str) -> str:
         field_elements = self._convert_binstr_to_field_elements(ciphertext)
+        print(ciphertext)
+        print(field_elements)
         decrypted_field_elements = []
         for y in field_elements:
             decrypted_field_elements.append((y - self.b) * self.a.inv)
         return self._convert_field_elements_to_text(decrypted_field_elements)
 
-field = GaloisField(2, 3, Polynomial([1, 0, 1, 1], 2))
-a = GFElement(Polynomial([0, 1], 2), field)
+field = GaloisField(2, 4, Polynomial([1,0,0,1,1], 2))
+# print(Polynomial([1,0,0,1,1], 2))
+a = GFElement(Polynomial([1], 2), field)
 print(a)
-b = GFElement(Polynomial([0,1], 2), field)
+b = GFElement(Polynomial([1], 2), field)
 print(b)
 cipher = AffineCipher(a=a, b=b, field=field)
 print(cipher.encrypt("HELLO"))
