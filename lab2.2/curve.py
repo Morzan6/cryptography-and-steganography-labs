@@ -7,12 +7,8 @@ from pprint import pprint
 
 class EllipticCurve:
     def __init__(self, a: int, b: int, p: int):
-        """
-        Создает эллиптическую кривую в форме y^2 = x^3 + ax + b (mod p)
-
-        """
         if (4 * a**3 + 27 * b**2) % p == 0:
-            raise ValueError("The curve is singular, choose different a and b.")
+            raise ValueError("Кривая является сингулярной, выберите другие a и b.")
         self.a = a
         self.b = b
         self.p = p
@@ -87,7 +83,7 @@ class EllipticCurve:
                 self._order_cache = possible_orders[0]
                 return self._order_cache
 
-        raise RuntimeError(f"Не удалось однозначно определить порядок кривой после {max_points_to_try} попыток.")
+        raise RuntimeError("Не удалось однозначно определить порядок кривой.")
 
     def random_point(self) -> "Point":
         while True:
@@ -128,10 +124,6 @@ class EllipticCurve:
 
 class Point:
     def __init__(self, curve: EllipticCurve, x: int, y: int):
-        """
-        Новая точка на эллиптической кривой
-
-        """
         self.curve = curve
         self.x = x
         self.y = y
@@ -139,7 +131,7 @@ class Point:
 
         if not (self.x is None and self.y is None):
             if not curve.is_point_on_curve(x, y):
-                raise ValueError("The point is not on the given curve.")
+                raise ValueError("Точка не лежит на данной кривой.")
 
     def order(self) -> int:
         if self._order_cache is not None:
@@ -191,9 +183,6 @@ class Point:
             n += 1
 
     def compress(self) -> str:
-        """
-        Возращает строковое представление сжатой точки
-        """
         bx = bytes.fromhex(hex(self.x)[2:].zfill(64))
         by = bytes.fromhex(hex(self.y)[2:].zfill(64))
         y = 2 + (by[-1] & 1)
@@ -204,9 +193,6 @@ class Point:
 
     @classmethod
     def uncompress(self, curve: EllipticCurve, compressed: str) -> Self:
-        """
-        Конвертирует сжатую точку в объект Point, находя Y координату
-        """
         compressed_bytes = bytes.fromhex(compressed)
         sign_y = compressed_bytes[0] - 2
         x = int.from_bytes(compressed_bytes[1:], byteorder="big")
@@ -214,7 +200,7 @@ class Point:
         rhs = (x**3 + curve.a * x + curve.b) % curve.p
 
         if pow(rhs, (curve.p - 1) // 2, curve.p) != 1:
-            raise ValueError("The point is not on the given curve.")
+            raise ValueError("точка не лежит на данной кривой")
 
         y = Point.mod_sqrt(rhs, curve.p)
 
@@ -245,10 +231,10 @@ class Point:
 
     def __add__(self, other):
         if not isinstance(other, Point):
-            raise TypeError("The operand must be a Point.")
+            raise TypeError("Операнд должен быть точкой")
 
         if self.curve != other.curve:
-            raise ValueError("Points must be on the same curve.")
+            raise ValueError("Точки лежат на разных кривых")
 
         if self.x is None and self.y is None:
             return other
@@ -256,10 +242,11 @@ class Point:
             return self
 
         if self.x == other.x and self.y != other.y:
-            # P + (-P) = O 
             return Point(self.curve, None, None)
 
         if self.x == other.x:
+            if self.y == 0:
+                return Point(self.curve, None, None)
             slope = (3 * self.x**2 + self.curve.a) * pow(2 * self.y, -1, self.curve.p)
         else:
             slope = (other.y - self.y) * pow(other.x - self.x, -1, self.curve.p)
@@ -290,11 +277,8 @@ class Point:
 
     @staticmethod
     def mod_sqrt(a: int, p: int):
-        """
-        Вычисляет квадратный корень по модулю p, используя алгоритм Тонелли-Шанкса.
-        """
         if pow(a, (p - 1) // 2, p) != 1:
-            raise ValueError(f"No square root exists for {a} modulo {p}")
+            raise ValueError(f"Квадратный корень не существует для {a} modulo {p}")
 
         if p % 4 == 3:
             return pow(a, (p + 1) // 4, p)
@@ -318,7 +302,7 @@ class Point:
                 if t2 == 1:
                     break
             else:
-                raise RuntimeError("Tonelli-Shanks failed to converge.")
+                raise RuntimeError("Алгоритм Тонелли-Шанкса не сходился")
 
             b = pow(c, 2 ** (m - i - 1), p)
             c = pow(b, 2, p)
@@ -364,11 +348,22 @@ def _lcm(a: int, b: int) -> int:
 def main():
     curve = EllipticCurve(3, 6, 29)
     point = Point(curve, 26, 17)
-    print(curve.order())
-    print(curve)
-    pprint(curve.enumerate_points())
-    pprint(curve.prime_order_subgroups())
-    print(point.order())
+    
+
+    while True:
+        a = random.randint(1, 1543 - 1)
+        b = random.randint(1, 1543 - 1)
+        try:
+            curve_large = EllipticCurve(a, b, 1543)
+            order = curve_large.order()
+            if 2**10 < order < 2**512:
+                break
+        except:
+            continue
+    print(curve_large)
+    print(curve_large.order())
+    pprint(curve_large.enumerate_points())
+    pprint(curve_large.prime_order_subgroups())
 
 if __name__ == "__main__":
     main()
